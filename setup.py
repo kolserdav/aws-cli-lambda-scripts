@@ -8,6 +8,7 @@ class FunctionName:
     funcPath = ''
     em = ''
     rootScripts = ''
+    scriptObjects = []
 
     def find_root_dir(self):
         abs_cwd = os.path.abspath('.')
@@ -24,18 +25,38 @@ class FunctionName:
         script = foo.Script()
         script.script()
 
+    def select_dir(self, root_scripts, i = 0):
+        if self.scriptObjects == []:
+            self.scriptObjects = os.listdir(root_scripts)
+            self.select_dir(root_scripts)
+        elif i < len(self.scriptObjects):
+            script_object = self.scriptObjects[i]
+            if os.path.isdir(root_scripts + '/' + script_object) and not \
+                    script_object.find('.') + 1 and not \
+                    script_object.find('_') + 1 and not \
+                    script_object.find('resources') + 1:
+                print(script_object)
+                print('\n')
+            self.select_dir(root_scripts, i + 1)
+        else:
+            return 0
+
     def get_function_name(self):
         self.funcName = input('Script name: ')
         self.funcName = self.funcName.strip()
         self.rootScripts = os.path.abspath('./scripts')
-        self.funcPath = self.rootScripts + "/" + self.funcName
-        if os.path.isdir(self.funcPath):
-            self.get_module_import()
-            return 0
-        else:
-            print("Error: directory [" + self.funcName + "] in [" + self.rootScripts + "]  undefined")
+        if self.funcName == 'scripts':
+            self.select_dir(self.rootScripts)
             self.get_function_name()
-        self.find_root_dir()
+        else:
+            self.funcPath = self.rootScripts + "/" + self.funcName
+            if os.path.isdir(self.funcPath):
+                self.get_module_import()
+                return 0
+            else:
+                print("Error: directory [" + self.funcName + "] in [" + self.rootScripts + "]  undefined")
+                self.get_function_name()
+            self.find_root_dir()
 
 
 

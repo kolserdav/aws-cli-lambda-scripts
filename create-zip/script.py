@@ -1,9 +1,10 @@
 import subprocess
 import os
+import handler
 
 
 class Script:
-    rootPath = os.path.realpath(os.getcwd() + '/../')
+    rootPath = handler.find_root_dir()
     scriptsPath = rootPath + '/scripts/'
     defaultZipFileName = (os.path.basename(rootPath)) + '.zip'
     nameZip = input('Zip file name <' + defaultZipFileName + '>: ')
